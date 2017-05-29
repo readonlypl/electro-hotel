@@ -2,6 +2,7 @@
 
 > Move your Hotel panel from browser into separate desktop app. 
 
+Learn  more i[about awesome Hotel](https://github.com/typicode/hotel) app control panel.
 
 ## Dev
 
