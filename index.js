@@ -38,10 +38,6 @@ app.on('activate', () => {
 });
 
 app.on('ready', () => {
-	// mainWindow =  new electron.BrowserWindow({
-	// 	width: 600,
-	// 	height: 400
-	// });
 	mainWindow = createMainWindow();
 	mainWindow.loadURL(url.format({
 		hostname: 'localhost',
@@ -50,19 +46,19 @@ app.on('ready', () => {
 		slashes: true
 	}));
 
-	//Get access to the loaded webpage
-	const contents = mainWindow.webContents.on('dom-ready', () => {
-    mainWindow.webContents.executeJavaScript(
-		`
-		const shell = require('electron').shell;
-		document.getElementById('app').addEventListener("click", (event) => {
-			event.preventDefault();
-			if(event.target.tagName === 'A') {
-				shell.openExternal(event.target.href);
-			}
-		});
-		`
-	);
+	// Get access to the loaded webpage
+	mainWindow.webContents.on('dom-ready', () => {
+		mainWindow.webContents.executeJavaScript(
+			`
+			const shell = require('electron').shell;
+			document.getElementById('app').addEventListener("click", (event) => {
+				if(event.target.tagName === 'A') {
+					event.preventDefault();					
+					shell.openExternal(event.target.href);
+				}
+			});
+			`
+		);
 	});
 	mainWindow.on('closed', onClosed);
 });
