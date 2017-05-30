@@ -22,14 +22,6 @@ function createMainWindow() {
 		height: 400
 	});
 
-	win.loadURL(url.format({
-		hostname: 'localhost',
-		protocol: 'http:',
-		port: '2000',
-		slashes: true
-	}));
-	win.on('closed', onClosed);
-
 	return win;
 }
 
@@ -46,5 +38,31 @@ app.on('activate', () => {
 });
 
 app.on('ready', () => {
+	// mainWindow =  new electron.BrowserWindow({
+	// 	width: 600,
+	// 	height: 400
+	// });
 	mainWindow = createMainWindow();
+	mainWindow.loadURL(url.format({
+		hostname: 'localhost',
+		protocol: 'http:',
+		port: '2000',
+		slashes: true
+	}));
+
+	//Get access to the loaded webpage
+	const contents = mainWindow.webContents.on('dom-ready', () => {
+    mainWindow.webContents.executeJavaScript(
+		`
+		const shell = require('electron').shell;
+		document.getElementById('app').addEventListener("click", (event) => {
+			event.preventDefault();
+			if(event.target.tagName === 'A') {
+				shell.openExternal(event.target.href);
+			}
+		});
+		`
+	);
+	});
+	mainWindow.on('closed', onClosed);
 });
